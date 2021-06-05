@@ -35,6 +35,10 @@ const FAKE_DESCRIPTIONS = [
   'Французские слова, кроме вороны тело млекопитающего состоит из под пальмой.',
 ];
 
+// const checkString = function (string, maxLength) {
+//   return string.length <= maxLength;
+// };
+
 const getRandomInteger = function (firstNumber, secondNumber) {
   if (firstNumber < 0 || secondNumber < 0) {
     return false;
@@ -96,6 +100,5 @@ const createPhoto = function () {
 
 const similiarPhotos = new Array(PHOTO_COUNT).fill(null).map(() => createPhoto());
 
+// eslint-disable-next-line no-console
 console.log(similiarPhotos);
-
-
