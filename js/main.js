@@ -94,11 +94,11 @@ const createPhoto = function () {
     url: getUniqueUrl(PHOTO_COUNT),
     description: getRandomArrayElement(FAKE_DESCRIPTIONS),
     likes: getRandomInteger(15, 200),
-    comments: new Array(getRandomInteger(1, 4)).fill(null).map(() => createComment()),
+    comments: new Array(getRandomInteger(1, 4)).fill(null).map(createComment),
   };
 };
 
-const similiarPhotos = new Array(PHOTO_COUNT).fill(null).map(() => createPhoto());
+const similiarPhotos = new Array(PHOTO_COUNT).fill(null).map(createPhoto);
 
 // eslint-disable-next-line no-console
 console.log(similiarPhotos);
