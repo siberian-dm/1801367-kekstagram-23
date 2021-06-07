@@ -1,6 +1,6 @@
 const PHOTO_COUNT = 25;
 
-const FAKE_COMMENTS = [
+const COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -9,7 +9,7 @@ const FAKE_COMMENTS = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
-const FAKE_NAMES = [
+const NAMES = [
   'Артём',
   'Лёха',
   'Саня',
@@ -22,7 +22,7 @@ const FAKE_NAMES = [
   'Клаус',
 ];
 
-const FAKE_DESCRIPTIONS = [
+const DESCRIPTIONS = [
   'Достаточной близости радиозвезд их расстояний и была выдвинута гипотеза.',
   'Отелло рассвирипело и нижегородские собака.',
   'Клетке сидит мой пернатый друг на камешке, а в любви.',
@@ -35,10 +35,13 @@ const FAKE_DESCRIPTIONS = [
   'Французские слова, кроме вороны тело млекопитающего состоит из под пальмой.',
 ];
 
-// const checkString = function (string, maxLength) {
-//   return string.length <= maxLength;
-// };
-
+/**
+* Возвращает случайное целое число из заданного диапозона положительных чисел
+*
+* @param {number} firstNumber - начало/конец диапозона
+* @param {number} secondNumber - начало/конец диапозона
+* @return {number}
+*/
 const getRandomInteger = function (firstNumber, secondNumber) {
   if (firstNumber < 0 || secondNumber < 0) {
     return false;
@@ -48,53 +51,48 @@ const getRandomInteger = function (firstNumber, secondNumber) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
+/**
+ * Возвращает случайный элемент массива
+ *
+ * @param {Array} elements - массив элементов
+ * @return {arrayItem}
+ */
 const getRandomArrayElement = function (elements) {
   return elements[getRandomInteger(0, elements.length - 1)];
 };
 
-const usedNumber = [];
-
-const getUniqueNumber = function (min, max) {
-  let uniqueNumber;
-  do {
-    uniqueNumber = getRandomInteger(min, max);
-  } while (usedNumber.includes(uniqueNumber));
-
-  usedNumber.push(uniqueNumber);
-
-  return uniqueNumber;
-};
-
-const usedUrl = [];
-
-const getUniqueUrl = function (max) {
-  let uniqueUrl;
-  do {
-    uniqueUrl = `photos/${ getRandomInteger(1, max) }.jpg`;
-  } while (usedUrl.includes(uniqueUrl));
-
-  usedUrl.push(uniqueUrl);
-
-  return uniqueUrl;
-};
-
-const createComment = function () {
+/**
+ * Возвращает объект 'Комментарий для фото'
+ *
+ * @param {number} photoId - свойство id объекта 'Фото'
+ * @param {number} commentIndex - индекс элемента массива в свойстве comments объекта 'Фото'
+ * @return {Object}
+ */
+const createComment = function (photoId, commentIndex) {
+  const uniqueNumber = +`${  photoId  }${  commentIndex  }${getRandomInteger(1, 9)}`;
   return {
-    id: getUniqueNumber(PHOTO_COUNT + 1, 1000),
+    id: uniqueNumber,
     avatar: `img/avatar-${ getRandomInteger(1, 6) }.svg`,
-    message: getRandomArrayElement(FAKE_COMMENTS),
-    name: getRandomArrayElement(FAKE_NAMES),
-
+    message: getRandomArrayElement(COMMENTS),
+    name: getRandomArrayElement(NAMES),
   };
 };
 
-const createPhoto = function () {
+/**
+ * Возвращает объект 'Фото'
+ *
+ * @param {any} arrayItem - не используется, нужен чтобы передать в функцию второй аргумент метода map() - index
+ * @param {number} itemIndex - индекс текущего обрабатываемого элемента в массиве 'similiarPhotos' методом map()
+ * @return {Object}
+ */
+const createPhoto = function (arrayItem, itemIndex) {
+  const photoId = itemIndex + 1;
   return {
-    id: getUniqueNumber(1, PHOTO_COUNT),
-    url: getUniqueUrl(PHOTO_COUNT),
-    description: getRandomArrayElement(FAKE_DESCRIPTIONS),
+    id: photoId,
+    url: `photos/${ photoId }.jpg`,
+    description: getRandomArrayElement(DESCRIPTIONS),
     likes: getRandomInteger(15, 200),
-    comments: new Array(getRandomInteger(1, 4)).fill(null).map(createComment),
+    comments: new Array(getRandomInteger(1, 4)).fill(photoId).map(createComment),
   };
 };
 
