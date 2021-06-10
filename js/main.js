@@ -1,4 +1,5 @@
 const PHOTO_COUNT = 25;
+const MAX_PHOTO_COMMENTS = 5;
 
 const COMMENTS = [
   'Всё отлично!',
@@ -48,8 +49,34 @@ const getRandomInteger = function (firstNumber, secondNumber) {
   }
   const min = Math.min(firstNumber, secondNumber);
   const max = Math.max(firstNumber, secondNumber) + 1;
+
   return Math.floor(Math.random() * (max - min) + min);
 };
+
+/**
+ *Возвращает функцию, которая генерирует уникальные случайные целые числа из заданного диапозона
+ *
+ * @param {number} min - начало диапозона
+ * @param {number} max - конец диапозона
+ * @return {Function}
+ */
+const getRandomUniqueInteger = function (min, max) {
+  const uniqueNumbers = [];
+  return function () {
+    if (uniqueNumbers.length >= (max - min + 1) ) {
+      throw new Error(`Перебраны все числа из диапазона от ${ min } до ${ max }`);
+    }
+
+    let uniqueNumber;
+    do {
+      uniqueNumber = getRandomInteger(min, max);
+    } while (uniqueNumbers.includes(uniqueNumber));
+    uniqueNumbers.push(uniqueNumber);
+    return uniqueNumber;
+  };
+};
+
+const commentIdGenerator = getRandomUniqueInteger(1, PHOTO_COUNT * MAX_PHOTO_COMMENTS);
 
 /**
  * Возвращает случайный элемент массива
@@ -68,10 +95,9 @@ const getRandomArrayElement = function (elements) {
  * @param {number} commentIndex - индекс элемента массива в свойстве comments объекта 'Фото'
  * @return {Object}
  */
-const createComment = function (photoId, commentIndex) {
-  const uniqueNumber = +`${  photoId  }${  commentIndex  }${getRandomInteger(1, 9)}`;
+const createComment = function () {
   return {
-    id: uniqueNumber,
+    id: commentIdGenerator(),
     avatar: `img/avatar-${ getRandomInteger(1, 6) }.svg`,
     message: getRandomArrayElement(COMMENTS),
     name: getRandomArrayElement(NAMES),
@@ -92,7 +118,7 @@ const createPhoto = function (arrayItem, itemIndex) {
     url: `photos/${ photoId }.jpg`,
     description: getRandomArrayElement(DESCRIPTIONS),
     likes: getRandomInteger(15, 200),
-    comments: new Array(getRandomInteger(1, 4)).fill(photoId).map(createComment),
+    comments: new Array(getRandomInteger(1, MAX_PHOTO_COMMENTS)).fill(null).map(createComment),
   };
 };
 
