@@ -1,6 +1,7 @@
 import {COMMENTS, NAMES, DESCRIPTIONS} from './vars.js';
 import {getRandomInteger, getRandomArrayElement} from '../utils.js';
 
+const MAX_NUMBER_COMMENTS = 5;
 
 /**
  * Возвращает объект 'Комментарий для фото'
@@ -31,7 +32,7 @@ const createPhoto = function (photoId) {
     url: `photos/${photoId}.jpg`,
     description: getRandomArrayElement(DESCRIPTIONS),
     likes: getRandomInteger(15, 200),
-    comments: new Array(getRandomInteger(1, 5)).fill(photoId).map(createComment),
+    comments: new Array(getRandomInteger(1, MAX_NUMBER_COMMENTS)).fill(photoId).map(createComment),
   };
 };
 
