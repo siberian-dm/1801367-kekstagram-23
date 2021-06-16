@@ -1,5 +1,5 @@
 import {COMMENTS, NAMES, DESCRIPTIONS} from './vars.js';
-import {getRandomInteger, getRandomArrayElement} from '../utils.js';
+import {getRandomInteger, getRandomArrayElement} from './utils.js';
 
 const MAX_NUMBER_COMMENTS = 5;
 
