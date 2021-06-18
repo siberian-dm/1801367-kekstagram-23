@@ -11,4 +11,4 @@ thumbnailsContainer.appendChild(thumbnailsFragment);
 
 const thumbnails = thumbnailsContainer.querySelectorAll('.picture');
 
-generateBigPicturesOpen(thumbnails);
+generateBigPicturesOpen(thumbnails, photoObjects);
