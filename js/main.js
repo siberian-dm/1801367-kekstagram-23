@@ -1,6 +1,7 @@
 import {generatePhotos} from './__mocks__/photos.js';
 import {generateThumbnails} from './thumbnails.js';
 import {generateBigPicturesOpen} from './big-pictures.js';
+import './img-upload.js';
 
 const MAX_PHOTO_COUNT = 25;
 const thumbnailsContainer = document.querySelector('.pictures');
