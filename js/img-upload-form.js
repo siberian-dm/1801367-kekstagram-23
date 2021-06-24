@@ -1,23 +1,85 @@
 const HASHTAGS_MAX = 5;
 const COMMENT_LENGTH_MAX = 140;
-const imgUploadForm = document.querySelector('.img-upload__form');
-const imgUploadInput = imgUploadForm.querySelector('.img-upload__input');
-const imgUploadOverlay = imgUploadForm.querySelector('.img-upload__overlay');
-const cancelButton = imgUploadForm.querySelector('.img-upload__cancel');
-const hashtagsInput = imgUploadForm.querySelector('.text__hashtags');
-const descriptionInput = imgUploadForm.querySelector('.text__description');
+const imgUploadInput = document.querySelector('.img-upload__input');
+const imgUploadOverlay = document.querySelector('.img-upload__overlay');
+const cancelButton = imgUploadOverlay.querySelector('.img-upload__cancel');
+const hashtagsInput = imgUploadOverlay.querySelector('.text__hashtags');
+const descriptionInput = imgUploadOverlay.querySelector('.text__description');
 
-
-imgUploadInput.addEventListener('change', () => {
-  imgUploadOverlay.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-});
-
-cancelButton.addEventListener('click', () => {
+/**
+ * Закрыет форму для добавления фотографии.
+ * Сбрасывает поля формы, удаляет обработчики событий при закрытии формы.
+ *
+ */
+const closeUploadForm = function () {
+  imgUploadInput.value = '';
+  hashtagsInput.value = '';
+  descriptionInput.value = '';
   imgUploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
+  // eslint-disable-next-line no-use-before-define
+  document.removeEventListener('keydown', onUploadFormEscDown);
+  cancelButton.removeEventListener('click', closeUploadForm);
+};
+
+/**
+ * Функция для обработки события по нажатию клавиши Escape на документе.
+ *
+ * @param {Event} evt - событие 'keydown'
+ */
+const onUploadFormEscDown = function (evt) {
+  if (evt.key === 'Escape' || evt.key === 'Esc') {
+    evt.preventDefault();
+    closeUploadForm();
+  }
+};
+
+/**
+ * Открывает форму для добавления фотографии.
+ * Добавляет обработчики событий при открытии формы.
+ *
+ */
+const openUploadForm = function () {
+  imgUploadOverlay.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  document.addEventListener('keydown', onUploadFormEscDown);
+  cancelButton.addEventListener('click', closeUploadForm);
+};
+
+imgUploadInput.addEventListener('change', openUploadForm);
+
+hashtagsInput.addEventListener('focus', () => {
+  document.removeEventListener('keydown', onUploadFormEscDown);
 });
 
+hashtagsInput.addEventListener('blur', () => {
+  document.addEventListener('keydown', onUploadFormEscDown);
+});
+
+descriptionInput.addEventListener('focus', () => {
+  document.removeEventListener('keydown', onUploadFormEscDown);
+});
+
+descriptionInput.addEventListener('blur', () => {
+  document.addEventListener('keydown', onUploadFormEscDown);
+});
+
+descriptionInput.addEventListener('input', () => {
+  if (descriptionInput.value.length > COMMENT_LENGTH_MAX) {
+    descriptionInput.setCustomValidity(`Длина комментария не может составлять больше ${COMMENT_LENGTH_MAX} символов;`);
+  }
+  else {
+    descriptionInput.setCustomValidity('');
+  }
+  descriptionInput.reportValidity();
+});
+
+/**
+ * Прверяет хэш-тег на соответствиие заданному формату
+ *
+ * @param {string} hashtag
+ * @return {boolean}
+ */
 const testHashtag = function (hashtag) {
   const re = /^#[A-Za-zА-Яа-я0-9]*$/;
   let result = false;
@@ -52,7 +114,7 @@ hashtagsInput.addEventListener('input', () => {
     hashtagsInput.setCustomValidity('');
     const uniqueHashtags = [];
     for (let i = 0; i < hashtags.length; i++) {
-      const hashtag = hashtags[i];
+      const hashtag = hashtags[i].toLowerCase();
       if (uniqueHashtags.includes(hashtag)) {
         hashtagsInput.setCustomValidity(`Хэш-тег ${hashtag} уже есть в списке, используйте другое значение.`);
         break;
@@ -66,14 +128,4 @@ hashtagsInput.addEventListener('input', () => {
     }
   }
   hashtagsInput.reportValidity();
-});
-
-descriptionInput.addEventListener('input', () => {
-  if (descriptionInput.value.length > COMMENT_LENGTH_MAX) {
-    descriptionInput.setCustomValidity(`Длина комментария не может составлять больше ${COMMENT_LENGTH_MAX} символов;`);
-  }
-  else {
-    descriptionInput.setCustomValidity('');
-  }
-  descriptionInput.reportValidity();
 });
