@@ -1,4 +1,4 @@
-import {generatePhotos} from './__mocks__/photos.js';
+import {generatePhotos} from './mocks/photos.js';
 import {generateThumbnails} from './thumbnails.js';
 import {generateBigPicturesOpen} from './big-pictures.js';
 import './img-upload-form.js';
