@@ -1,25 +1,27 @@
 const HASHTAGS_MAX = 5;
+const HASHTAG_LENGTH_MIN = 2;
+const HASHTAG_LENGTH_MAX = 20;
 const COMMENT_LENGTH_MAX = 140;
-const imgUploadInput = document.querySelector('.img-upload__input');
-const imgUploadOverlay = document.querySelector('.img-upload__overlay');
-const cancelButton = imgUploadOverlay.querySelector('.img-upload__cancel');
-const hashtagsInput = imgUploadOverlay.querySelector('.text__hashtags');
-const descriptionInput = imgUploadOverlay.querySelector('.text__description');
+const uploadInput = document.querySelector('.img-upload__input');
+const uploadOverlay = document.querySelector('.img-upload__overlay');
+const cancelButton = uploadOverlay.querySelector('.img-upload__cancel');
+const hashtagsInput = uploadOverlay.querySelector('.text__hashtags');
+const descriptionInput = uploadOverlay.querySelector('.text__description');
 
 /**
  * Закрыет форму для добавления фотографии.
  * Сбрасывает поля формы, удаляет обработчики событий при закрытии формы.
  *
  */
-const closeUploadForm = function () {
-  imgUploadInput.value = '';
+const onUploadFormClose = function () {
+  uploadInput.value = '';
   hashtagsInput.value = '';
   descriptionInput.value = '';
-  imgUploadOverlay.classList.add('hidden');
+  uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   // eslint-disable-next-line no-use-before-define
   document.removeEventListener('keydown', onUploadFormEscDown);
-  cancelButton.removeEventListener('click', closeUploadForm);
+  cancelButton.removeEventListener('click', onUploadFormClose);
 };
 
 /**
@@ -30,7 +32,7 @@ const closeUploadForm = function () {
 const onUploadFormEscDown = function (evt) {
   if (evt.key === 'Escape' || evt.key === 'Esc') {
     evt.preventDefault();
-    closeUploadForm();
+    onUploadFormClose();
   }
 };
 
@@ -39,14 +41,14 @@ const onUploadFormEscDown = function (evt) {
  * Добавляет обработчики событий при открытии формы.
  *
  */
-const openUploadForm = function () {
-  imgUploadOverlay.classList.remove('hidden');
+const onUploadInbutChange = function () {
+  uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.addEventListener('keydown', onUploadFormEscDown);
-  cancelButton.addEventListener('click', closeUploadForm);
+  cancelButton.addEventListener('click', onUploadFormClose);
 };
 
-imgUploadInput.addEventListener('change', openUploadForm);
+uploadInput.addEventListener('change', onUploadInbutChange);
 
 hashtagsInput.addEventListener('focus', () => {
   document.removeEventListener('keydown', onUploadFormEscDown);
@@ -90,11 +92,11 @@ const testHashtag = function (hashtag) {
       - хэш-тег должен начинаться с символа # (решётка) и состоять только из букв и цифр, пробелы и спецсимволы не допускаются (#, @, $ и т. п.).
     `);
   }
-  else if (hashtag.length < 2) {
-    hashtagsInput.setCustomValidity('Минимальная длина хэш-тега - 2 символа.');
+  else if (hashtag.length < HASHTAG_LENGTH_MIN) {
+    hashtagsInput.setCustomValidity(`Минимальное количество символов - ${HASHTAG_LENGTH_MIN}.`);
   }
-  else if (hashtag.length > 20) {
-    hashtagsInput.setCustomValidity('Максимальная длина хэш-тега - 20 символов.');
+  else if (hashtag.length > HASHTAG_LENGTH_MAX) {
+    hashtagsInput.setCustomValidity(`Максимальное количество символов - ${HASHTAG_LENGTH_MAX}. Текущее количество - ${hashtag.length}.`);
   }
   else {
     hashtagsInput.setCustomValidity('');
@@ -108,7 +110,7 @@ hashtagsInput.addEventListener('input', () => {
   const hashtags = hashtagsInput.value.trim().split(/ +/);
 
   if (hashtags.length > 5) {
-    hashtagsInput.setCustomValidity(`Можно указать только ${HASHTAGS_MAX} хэш-тегов.`);
+    hashtagsInput.setCustomValidity(`Максимальное количество хэш-тегов - ${HASHTAGS_MAX}.`);
   }
   else {
     hashtagsInput.setCustomValidity('');
