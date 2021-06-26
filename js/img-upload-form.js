@@ -109,7 +109,7 @@ const testHashtag = function (hashtag) {
 hashtagsInput.addEventListener('input', () => {
   const hashtags = hashtagsInput.value.trim().split(/ +/);
 
-  if (hashtags.length > 5) {
+  if (hashtags.length > HASHTAGS_MAX) {
     hashtagsInput.setCustomValidity(`Максимальное количество хэш-тегов - ${HASHTAGS_MAX}.`);
   }
   else {
