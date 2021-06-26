@@ -62,22 +62,6 @@ const onUploadInbutChange = function () {
 
 uploadInput.addEventListener('change', onUploadInbutChange);
 
-hashtagsInput.addEventListener('focus', () => {
-  document.removeEventListener('keydown', onUploadFormEscDown);
-});
-
-hashtagsInput.addEventListener('blur', () => {
-  document.addEventListener('keydown', onUploadFormEscDown);
-});
-
-descriptionInput.addEventListener('focus', () => {
-  document.removeEventListener('keydown', onUploadFormEscDown);
-});
-
-descriptionInput.addEventListener('blur', () => {
-  document.addEventListener('keydown', onUploadFormEscDown);
-});
-
 descriptionInput.addEventListener('input', () => {
   if (descriptionInput.value.length > COMMENT_LENGTH_MAX) {
     descriptionInput.setCustomValidity(`Длина комментария не может составлять больше ${COMMENT_LENGTH_MAX} символов;`);
@@ -146,6 +130,15 @@ hashtagsInput.addEventListener('input', () => {
   hashtagsInput.reportValidity();
 });
 
+hashtagsInput.addEventListener('keydown', (evt) => {
+  evt.stopPropagation();
+});
+
+descriptionInput.addEventListener('keydown', (evt) => {
+  evt.stopPropagation();
+});
+
+
 const onScaleButtonClick = function (evt) {
   const currentScale = parseFloat(scaleInput.value);
 
@@ -166,3 +159,4 @@ scaleBiggerButton.addEventListener('click', onScaleButtonClick);
 scaleInput.addEventListener('change', () => {
   imgUploadPreview.style.transform = `scale(${parseFloat(scaleInput.value) / 100})`;
 });
+
