@@ -2,11 +2,21 @@ const HASHTAGS_MAX = 5;
 const HASHTAG_LENGTH_MIN = 2;
 const HASHTAG_LENGTH_MAX = 20;
 const COMMENT_LENGTH_MAX = 140;
+const SCALE_DEFAULT = 100;
+const SCALE_MIN = 25;
+const SCALE_MAX = 100;
+const SCALE_STEP = 25;
+
 const uploadInput = document.querySelector('.img-upload__input');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
 const cancelButton = uploadOverlay.querySelector('.img-upload__cancel');
 const hashtagsInput = uploadOverlay.querySelector('.text__hashtags');
 const descriptionInput = uploadOverlay.querySelector('.text__description');
+const scaleSmallerButton = uploadOverlay.querySelector('.scale__control--smaller');
+const scaleBiggerButton = uploadOverlay.querySelector('.scale__control--bigger');
+const scaleInput = uploadOverlay.querySelector('.scale__control--value');
+const imgUploadPreviewContainer = uploadOverlay.querySelector('.img-upload__preview');
+const imgUploadPreview = imgUploadPreviewContainer.children[0];
 
 /**
  * Закрыет форму для добавления фотографии.
@@ -44,6 +54,8 @@ const onUploadFormEscDown = function (evt) {
 const onUploadInbutChange = function () {
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
+  scaleInput.value = `${SCALE_DEFAULT}%`;
+  imgUploadPreview.style.transform = `scale(${SCALE_DEFAULT / 100})`;
   document.addEventListener('keydown', onUploadFormEscDown);
   cancelButton.addEventListener('click', onUploadFormClose);
 };
@@ -73,6 +85,7 @@ descriptionInput.addEventListener('input', () => {
   else {
     descriptionInput.setCustomValidity('');
   }
+
   descriptionInput.reportValidity();
 });
 
@@ -129,5 +142,27 @@ hashtagsInput.addEventListener('input', () => {
       }
     }
   }
+
   hashtagsInput.reportValidity();
+});
+
+const onScaleButtonClick = function (evt) {
+  const currentScale = parseFloat(scaleInput.value);
+
+  if (evt.target.classList.contains('scale__control--smaller')) {
+    scaleInput.value = ((currentScale - SCALE_STEP) <= SCALE_MIN) ? `${SCALE_MIN}%` : `${currentScale - SCALE_STEP}%`;
+  }
+  else {
+    scaleInput.value = ((currentScale + SCALE_STEP) >= SCALE_MAX) ? `${SCALE_MAX}%` : `${currentScale + SCALE_STEP}%`;
+  }
+
+  scaleInput.dispatchEvent(new Event('change'));
+};
+
+scaleSmallerButton.addEventListener('click', onScaleButtonClick);
+
+scaleBiggerButton.addEventListener('click', onScaleButtonClick);
+
+scaleInput.addEventListener('change', () => {
+  imgUploadPreview.style.transform = `scale(${parseFloat(scaleInput.value) / 100})`;
 });
