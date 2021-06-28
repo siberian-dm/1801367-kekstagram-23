@@ -1,3 +1,5 @@
+import '../nouislider/nouislider.js';
+
 const HASHTAGS_MAX = 5;
 const HASHTAG_LENGTH_MIN = 2;
 const HASHTAG_LENGTH_MAX = 20;
@@ -17,6 +19,10 @@ const scaleBiggerButton = uploadOverlay.querySelector('.scale__control--bigger')
 const scaleInput = uploadOverlay.querySelector('.scale__control--value');
 const imgUploadPreviewContainer = uploadOverlay.querySelector('.img-upload__preview');
 const imgUploadPreview = imgUploadPreviewContainer.children[0];
+const effectLevelSlider = uploadOverlay.querySelector('.effect-level__slider');
+const effectLevel = uploadOverlay.querySelector('.effect-level__value');
+const effectList = uploadOverlay.querySelector('.effects__list');
+
 
 /**
  * Закрыет форму для добавления фотографии.
@@ -138,7 +144,6 @@ descriptionInput.addEventListener('keydown', (evt) => {
   evt.stopPropagation();
 });
 
-
 const onScaleButtonClick = function (evt) {
   const currentScale = parseFloat(scaleInput.value);
 
@@ -160,3 +165,88 @@ scaleInput.addEventListener('change', () => {
   imgUploadPreview.style.transform = `scale(${parseFloat(scaleInput.value) / 100})`;
 });
 
+noUiSlider.create(effectLevelSlider, {
+  range: {
+    min: 0,
+    max: 100,
+  },
+  start: 100,
+  step: 1,
+  connect: 'lower',
+});
+
+effectLevelSlider.style.display = 'none';
+
+effectLevelSlider.noUiSlider.on('update', (values, handle) => {
+  effectLevel.value = values[handle];
+});
+
+const onEffectListChange = function (evt) {
+  imgUploadPreview.classList = '';
+  switch (evt.target.id) {
+    case 'effect-none':
+      effectLevelSlider.style.display = 'none';
+      break;
+    default:
+      effectLevelSlider.style.display = 'block';
+  }
+  switch (evt.target.id) {
+    case 'effect-chrome':
+      imgUploadPreview.classList.add('effects__preview--chrome');
+      effectLevelSlider.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 1,
+        },
+        start: 1,
+        step: 0.1,
+      });
+      break;
+    case 'effect-sepia':
+      imgUploadPreview.classList.add('effects__preview--sepia');
+      effectLevelSlider.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 1,
+        },
+        start: 1,
+        step: 0.1,
+      });
+      break;
+    case 'effect-marvin':
+      imgUploadPreview.classList.add('effects__preview--marvin');
+      effectLevelSlider.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 100,
+        },
+        start: 100,
+        step: 1,
+      });
+      break;
+    case 'effect-phobos':
+      imgUploadPreview.classList.add('effects__preview--phobos');
+      effectLevelSlider.noUiSlider.updateOptions({
+        range: {
+          min: 0,
+          max: 3,
+        },
+        start: 3,
+        step: 0.1,
+      });
+      break;
+    case 'effect-heat':
+      imgUploadPreview.classList.add('effects__preview--heat');
+      effectLevelSlider.noUiSlider.updateOptions({
+        range: {
+          min: 1,
+          max: 3,
+        },
+        start: 3,
+        step: 0.1,
+      });
+      break;
+  }
+};
+
+effectList.addEventListener('change', onEffectListChange);
