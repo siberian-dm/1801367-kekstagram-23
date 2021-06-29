@@ -2,69 +2,10 @@ const HASHTAGS_MAX = 5;
 const HASHTAG_LENGTH_MIN = 2;
 const HASHTAG_LENGTH_MAX = 20;
 const COMMENT_LENGTH_MAX = 140;
-const uploadInput = document.querySelector('.img-upload__input');
+
 const uploadOverlay = document.querySelector('.img-upload__overlay');
-const cancelButton = uploadOverlay.querySelector('.img-upload__cancel');
 const hashtagsInput = uploadOverlay.querySelector('.text__hashtags');
 const descriptionInput = uploadOverlay.querySelector('.text__description');
-
-/**
- * Закрыет форму для добавления фотографии.
- * Сбрасывает поля формы, удаляет обработчики событий при закрытии формы.
- *
- */
-const onUploadFormClose = function () {
-  uploadInput.value = '';
-  hashtagsInput.value = '';
-  descriptionInput.value = '';
-  uploadOverlay.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-  // eslint-disable-next-line no-use-before-define
-  document.removeEventListener('keydown', onUploadFormEscDown);
-  cancelButton.removeEventListener('click', onUploadFormClose);
-};
-
-/**
- * Функция для обработки события по нажатию клавиши Escape на документе.
- *
- * @param {Event} evt - событие 'keydown'
- */
-const onUploadFormEscDown = function (evt) {
-  if (evt.key === 'Escape' || evt.key === 'Esc') {
-    evt.preventDefault();
-    onUploadFormClose();
-  }
-};
-
-/**
- * Открывает форму для добавления фотографии.
- * Добавляет обработчики событий при открытии формы.
- *
- */
-const onUploadInbutChange = function () {
-  uploadOverlay.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-  document.addEventListener('keydown', onUploadFormEscDown);
-  cancelButton.addEventListener('click', onUploadFormClose);
-};
-
-uploadInput.addEventListener('change', onUploadInbutChange);
-
-hashtagsInput.addEventListener('focus', () => {
-  document.removeEventListener('keydown', onUploadFormEscDown);
-});
-
-hashtagsInput.addEventListener('blur', () => {
-  document.addEventListener('keydown', onUploadFormEscDown);
-});
-
-descriptionInput.addEventListener('focus', () => {
-  document.removeEventListener('keydown', onUploadFormEscDown);
-});
-
-descriptionInput.addEventListener('blur', () => {
-  document.addEventListener('keydown', onUploadFormEscDown);
-});
 
 descriptionInput.addEventListener('input', () => {
   if (descriptionInput.value.length > COMMENT_LENGTH_MAX) {
@@ -73,6 +14,7 @@ descriptionInput.addEventListener('input', () => {
   else {
     descriptionInput.setCustomValidity('');
   }
+
   descriptionInput.reportValidity();
 });
 
@@ -109,7 +51,7 @@ const testHashtag = function (hashtag) {
 hashtagsInput.addEventListener('input', () => {
   const hashtags = hashtagsInput.value.trim().split(/ +/);
 
-  if (hashtags.length > 5) {
+  if (hashtags.length > HASHTAGS_MAX) {
     hashtagsInput.setCustomValidity(`Максимальное количество хэш-тегов - ${HASHTAGS_MAX}.`);
   }
   else {
@@ -129,5 +71,14 @@ hashtagsInput.addEventListener('input', () => {
       }
     }
   }
+
   hashtagsInput.reportValidity();
+});
+
+hashtagsInput.addEventListener('keydown', (evt) => {
+  evt.stopPropagation();
+});
+
+descriptionInput.addEventListener('keydown', (evt) => {
+  evt.stopPropagation();
 });
