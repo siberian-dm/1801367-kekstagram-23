@@ -15,6 +15,11 @@ const effectLevelSlider = uploadOverlay.querySelector('.effect-level__slider');
 const effectLevel = uploadOverlay.querySelector('.effect-level__value');
 const effectList = uploadOverlay.querySelector('.effects__list');
 
+/**
+ * Обрабатывает события по нажатию на кнопки увеличения и уменьшения масштаба изображения.
+ *
+ * @param {Event} evt - событие 'click'
+ */
 const onScaleButtonClick = function (evt) {
   const currentScale = parseFloat(scaleInput.value);
 
@@ -73,6 +78,9 @@ effectLevel.addEventListener('change', () => {
   }
 });
 
+/**
+ * Сбрасывает фильтры и масштаб изображения
+ */
 const resetImgEffects = function () {
   scaleInput.value = `${SCALE_DEFAULT}%`;
   imgUploadPreview.style.transform = `scale(${SCALE_DEFAULT / 100})`;
@@ -81,6 +89,12 @@ const resetImgEffects = function () {
   effectLevelSlider.style.display = 'none';
 };
 
+/**
+ * Обрабатывает событие по изменению выбора радиокнопки, отвечающей за наложение эффектов.
+ * Добавляет эффект изображению и обновляет параметры noUiSlider в зависимости от выбора.
+ *
+ * @param {Event} evt - событие 'change'
+ */
 const onEffectListChange = function (evt) {
   resetImgEffects();
   if (evt.target.id !== 'effect-none') {
