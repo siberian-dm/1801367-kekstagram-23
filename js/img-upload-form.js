@@ -179,10 +179,32 @@ effectLevelSlider.style.display = 'none';
 
 effectLevelSlider.noUiSlider.on('update', (values, handle) => {
   effectLevel.value = values[handle];
+  effectLevel.dispatchEvent(new Event('change'));
+});
+
+effectLevel.addEventListener('change', () => {
+  switch (imgUploadPreview.classList.value) {
+    case 'effects__preview--chrome':
+      imgUploadPreview.style.filter = `grayscale(${effectLevel.value})`;
+      break;
+    case 'effects__preview--sepia':
+      imgUploadPreview.style.filter = `sepia(${effectLevel.value})`;
+      break;
+    case 'effects__preview--marvin':
+      imgUploadPreview.style.filter = `invert(${effectLevel.value}%)`;
+      break;
+    case 'effects__preview--phobos':
+      imgUploadPreview.style.filter = `blur(${effectLevel.value}px)`;
+      break;
+    case 'effects__preview--heat':
+      imgUploadPreview.style.filter = `brightness(${effectLevel.value})`;
+      break;
+  }
 });
 
 const onEffectListChange = function (evt) {
-  imgUploadPreview.classList = '';
+  imgUploadPreview.classList.value = '';
+  imgUploadPreview.style.removeProperty('filter');
   switch (evt.target.id) {
     case 'effect-none':
       effectLevelSlider.style.display = 'none';
