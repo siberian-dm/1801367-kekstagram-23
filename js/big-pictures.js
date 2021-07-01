@@ -1,6 +1,6 @@
 const bigPictureOverlay = document.querySelector('.big-picture');
 const cancelButton = bigPictureOverlay.querySelector('.big-picture__cancel');
-const bigPictureContainer = bigPictureOverlay.querySelector('.big-picture__img');
+const bigPicture = bigPictureOverlay.querySelector('.big-picture__img').children[0];
 const likesCount = bigPictureOverlay.querySelector('.likes-count');
 const socialCommentsCount = bigPictureOverlay.querySelector('.social__comment-count');
 const commentsCount = socialCommentsCount.querySelector('.comments-count');
@@ -33,34 +33,29 @@ const openBigPictureModal = function () {
 cancelButton.addEventListener('click', closeBigPictureModal);
 
 /**
- * Принимает HTML-элемент (миниатюру фотографии) и объект-фотографию, добавляет обработчик клика на миниатюре,
- * который отрисовывает комментарии, из объекта-фотографии, в HTML-разметке модального окна полноэкранного
- * изображения.
+ * Принимает массив объектов-комментариев, отрисовывает комментарии под фотографией.
  *
- * @param {Object} thumbnail - HTML-элемент (миниатюру фотографии)
- * @param {Object} photo - объект-фотография
+ * @param {Array} comments - массив объектов-комментариев
  */
-const addCommentsHandler = function (thumbnail, photo) {
-  thumbnail.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    // Удаляет текущие комментарии в HTML-разметке
-    for (const comment of socialComments.querySelectorAll('.social__comment')) {
-      comment.remove();
-    }
-    for (const comment of photo.comments) {
-      const socialComment = `
-        <li class="social__comment">
-        <img
-            class="social__picture"
-            src="${comment.avatar}"
-            alt="${comment.name}"
-            width="35" height="35">
-        <p class="social__text">${comment.message}</p>
-        </li>
-      `;
-      socialComments.insertAdjacentHTML('beforeend', socialComment);
-    }
-  });
+const addComments = function (comments) {
+  // Удаляет текущие комментарии в HTML-разметке
+  for (const comment of socialComments.querySelectorAll('.social__comment')) {
+    comment.remove();
+  }
+
+  for (const comment of comments) {
+    const socialComment = `
+      <li class="social__comment">
+      <img
+          class="social__picture"
+          src="${comment.avatar}"
+          alt="${comment.name}"
+          width="35" height="35">
+      <p class="social__text">${comment.message}</p>
+      </li>
+    `;
+    socialComments.insertAdjacentHTML('beforeend', socialComment);
+  }
 };
 
 /**
@@ -68,21 +63,18 @@ const addCommentsHandler = function (thumbnail, photo) {
  * который отрывает модальное окно полноэкранного изображения фотографии, добавляет в HTML-разметку её описание,
  * количество лайков и комментариев.
  *
- * @param {Object} thumbnail - HTML-элемент (миниатюру фотографии)
+ * @param {Object} thumbnail - HTML-элемент (изображение-ссылка)
  * @param {Object} photo - объект-фотография
  */
-const addBigPictureOpenHandler = function (thumbnail, photo) {
-  const bigPicture = bigPictureContainer.children[0];
-  const thumbnailImg = thumbnail.querySelector('.picture__img');
-  const thumbnailLikes = thumbnail.querySelector('.picture__likes');
-  const thumbnailComments = thumbnail.querySelector('.picture__comments');
-
-  thumbnail.addEventListener('click', () => {
+const onThumbnailClick = function (thumbnail, photo) {
+  thumbnail.addEventListener('click', (evt) => {
+    evt.preventDefault();
     openBigPictureModal();
-    bigPicture.src = thumbnailImg.src;
-    likesCount.textContent = thumbnailLikes.textContent;
-    commentsCount.textContent = thumbnailComments.textContent;
+    bigPicture.src = thumbnail.querySelector('.picture__img').src;
+    likesCount.textContent = thumbnail.querySelector('.picture__likes').textContent;
+    commentsCount.textContent = thumbnail.querySelector('.picture__comments').textContent;
     photoDescription.textContent = photo.description;
+    addComments(photo.comments);
   });
 };
 
@@ -95,8 +87,7 @@ const addBigPictureOpenHandler = function (thumbnail, photo) {
  */
 const generateBigPicturesOpen = function (thumbnails, photoObjects) {
   for (let i = 0; i < thumbnails.length; i++) {
-    addCommentsHandler(thumbnails[i], photoObjects[i]);
-    addBigPictureOpenHandler(thumbnails[i], photoObjects[i]);
+    onThumbnailClick(thumbnails[i], photoObjects[i]);
   }
 };
 
