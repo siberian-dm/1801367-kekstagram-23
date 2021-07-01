@@ -2,13 +2,15 @@ const thumbnailTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
 
+const thumbnailsContainer = document.querySelector('.pictures');
+
 /**
  * Возвращает DocumentFragment в котором сгененрированы эскизы фотографий по заданному шаблону
  *
  * @param {Array} photos - массив объектов-фотографий
  * @return {DocumentFragment}
  */
-const generateThumbnails = function (photos) {
+const renderThumbnails = function (photos) {
   const thumbnailsFragment = document.createDocumentFragment();
 
   photos.forEach(({url, likes, comments}) => {
@@ -20,7 +22,7 @@ const generateThumbnails = function (photos) {
     thumbnailsFragment.appendChild(newThumbnail);
   });
 
-  return thumbnailsFragment;
+  thumbnailsContainer.appendChild(thumbnailsFragment);
 };
 
-export {generateThumbnails};
+export {renderThumbnails};
