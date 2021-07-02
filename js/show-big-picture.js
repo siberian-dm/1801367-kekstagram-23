@@ -8,6 +8,11 @@ const socialComments = bigPictureOverlay.querySelector('.social__comments');
 const photoDescription = bigPictureOverlay.querySelector('.social__caption');
 const loadCommentsButton = bigPictureOverlay.querySelector('.comments-loader');
 
+/**
+ * Обрабатывает событие по нажатию клавиши Escape на документе.
+ *
+ * @param {Event} evt - событие 'keydown'
+ */
 const onPopupEscKeydown = function (evt) {
   evt.preventDefault();
   if (evt.key === 'Escape') {
@@ -16,12 +21,18 @@ const onPopupEscKeydown = function (evt) {
   }
 };
 
+/**
+ * Закрывает модальное окно полноэкранного отображения фото
+ */
 const closeBigPictureModal = function () {
   bigPictureOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onPopupEscKeydown);
 };
 
+/**
+ * Открывает модальное окно полноэкранного отображения фото
+ */
 const openBigPictureModal = function () {
   document.body.classList.add('modal-open');
   bigPictureOverlay.classList.remove('hidden');
@@ -33,7 +44,7 @@ const openBigPictureModal = function () {
 cancelButton.addEventListener('click', closeBigPictureModal);
 
 /**
- * Принимает массив объектов-комментариев, отрисовывает комментарии под фотографией.
+ * Принимает массив объектов-комментариев, отрисовывает комментарии под фото.
  *
  * @param {Array} comments - массив объектов-комментариев
  */
@@ -59,36 +70,25 @@ const addComments = function (comments) {
 };
 
 /**
- * Принимает HTML-элемент (миниатюру фотографии) и объект-фотографию, добавляет обработчик клика на миниатюре,
- * который отрывает модальное окно полноэкранного изображения фотографии, добавляет в HTML-разметку её описание,
- * количество лайков и комментариев.
+ * Принимает HTML-элемент (миниатюру фотографии) и свойства объекта-фото, добавляет обработчик клика на миниатюре,
+ * который отрывает модальное окно полноэкранного отображения фото, добавляет в HTML-разметку свойства объекта-фото.
  *
  * @param {Object} thumbnail - HTML-элемент (изображение-ссылка)
- * @param {Object} photo - объект-фотография
+ * @param {string} url - url фото
+ * @param {number} likes - количество лайков у фото
+ * @param {Array} comments - массив с комментариями
+ * @param {string} description - описание фото
  */
-const onThumbnailClick = function (thumbnail, photo) {
+const onThumbnailClick = function (thumbnail, url, likes, comments, description) {
   thumbnail.addEventListener('click', (evt) => {
     evt.preventDefault();
     openBigPictureModal();
-    bigPicture.src = thumbnail.querySelector('.picture__img').src;
-    likesCount.textContent = thumbnail.querySelector('.picture__likes').textContent;
-    commentsCount.textContent = thumbnail.querySelector('.picture__comments').textContent;
-    photoDescription.textContent = photo.description;
-    addComments(photo.comments);
+    bigPicture.src = url;
+    likesCount.textContent = likes;
+    commentsCount.textContent = comments.length;
+    photoDescription.textContent = description;
+    addComments(comments);
   });
 };
 
-/**
- * Принимает колекцию HTML-элементов (миниатюры фотографий) и массив объектов-фотографий, добавляет обработчики
- * событий для каждой миниатюры в коллекции, используя свойства соответствующего объекта-фотографии.
- *
- * @param {NodeList} thumbnails - колекция HTML-элементов
- * @param {Array} photoObjects - массив объектов-фотографий
- */
-const generateBigPicturesOpen = function (thumbnails, photoObjects) {
-  for (let i = 0; i < thumbnails.length; i++) {
-    onThumbnailClick(thumbnails[i], photoObjects[i]);
-  }
-};
-
-export {generateBigPicturesOpen};
+export {onThumbnailClick};
