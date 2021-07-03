@@ -1,3 +1,5 @@
+import {isEscapeEvent} from './utils.js';
+
 const bigPictureOverlay = document.querySelector('.big-picture');
 const cancelButton = bigPictureOverlay.querySelector('.big-picture__cancel');
 const bigPicture = bigPictureOverlay.querySelector('.big-picture__img').children[0];
@@ -9,36 +11,36 @@ const photoDescription = bigPictureOverlay.querySelector('.social__caption');
 const loadCommentsButton = bigPictureOverlay.querySelector('.comments-loader');
 
 /**
- * Обрабатывает событие по нажатию клавиши Escape на документе.
+ * Обрабатывает событие по нажатию клавиши Escape в режиме 'Big picture'.
  *
  * @param {Event} evt - событие 'keydown'
  */
-const onPopupEscKeydown = function (evt) {
-  evt.preventDefault();
-  if (evt.key === 'Escape') {
+const onBigPictureEscKeydown = function (evt) {
+  if (isEscapeEvent(evt)) {
+    evt.preventDefault();
     // eslint-disable-next-line no-use-before-define
     closeBigPictureModal();
   }
 };
 
 /**
- * Закрывает модальное окно полноэкранного отображения фото
+ * Закрывает модальное окно 'Big picture'.
  */
 const closeBigPictureModal = function () {
   bigPictureOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onPopupEscKeydown);
+  document.removeEventListener('keydown', onBigPictureEscKeydown);
 };
 
 /**
- * Открывает модальное окно полноэкранного отображения фото
+ * Показывает фото в режиме 'Big picture'(отображает модальное окно с большим фото и комментариями).
  */
-const openBigPictureModal = function () {
+const showBigPictureModal = function () {
   document.body.classList.add('modal-open');
   bigPictureOverlay.classList.remove('hidden');
   socialCommentsCount.classList.add('hidden');
   loadCommentsButton.classList.add('hidden');
-  document.addEventListener('keydown', onPopupEscKeydown);
+  document.addEventListener('keydown', onBigPictureEscKeydown);
 };
 
 cancelButton.addEventListener('click', closeBigPictureModal);
@@ -71,7 +73,7 @@ const addComments = function (comments) {
 
 /**
  * Принимает HTML-элемент (миниатюру фотографии) и свойства объекта-фото, добавляет обработчик клика на миниатюре,
- * который отрывает модальное окно полноэкранного отображения фото, добавляет в HTML-разметку свойства объекта-фото.
+ * который включает режим 'Big picture', добавляет в HTML-разметку данные из свойств объекта-фото.
  *
  * @param {Object} thumbnail - HTML-элемент (изображение-ссылка)
  * @param {string} url - url фото
@@ -82,7 +84,7 @@ const addComments = function (comments) {
 const onThumbnailClick = function (thumbnail, url, likes, comments, description) {
   thumbnail.addEventListener('click', (evt) => {
     evt.preventDefault();
-    openBigPictureModal();
+    showBigPictureModal();
     bigPicture.src = url;
     likesCount.textContent = likes;
     commentsCount.textContent = comments.length;

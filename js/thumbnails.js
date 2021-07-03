@@ -7,7 +7,7 @@ const thumbnailTemplate = document.querySelector('#picture')
 const thumbnailsContainer = document.querySelector('.pictures');
 
 /**
- * Отрисовывает миниатюры фотографий в HTML-разметке
+ * Отрисовывает миниатюры фотографий в HTML-разметке.
  *
  * @param {Array} photos - массив объектов-фотографий
  */
