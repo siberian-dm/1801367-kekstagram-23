@@ -4,7 +4,7 @@ const getData = (onSuccess, onFail) => {
       if (response.ok) {
         return response.json();
       } else {
-        throw new Error('Не удалось загрузить данные. Попробуйте ещё раз');
+        throw new Error(`${response.status} — ${response.statusText}`);
       }
     })
     .then((photos) => {
