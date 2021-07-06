@@ -1,4 +1,4 @@
-import {onThumbnailClick} from './show-big-picture.js';
+import {onThumbnailClick} from './big-picture.js';
 
 const thumbnailTemplate = document.querySelector('#picture')
   .content
