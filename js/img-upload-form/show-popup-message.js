@@ -1,4 +1,4 @@
-import {isEscapeEvent} from '../utils.js';
+import {isEscapeEvent} from '../utils/utils.js';
 
 const errorMessageTemplate = document.querySelector('#error')
   .content

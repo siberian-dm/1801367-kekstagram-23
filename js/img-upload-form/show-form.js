@@ -1,7 +1,7 @@
 import {resetImgEffects} from './upload-img-effects.js';
 import {showErrorPopupMessage, showSuccessPopupMessage} from './show-popup-message.js';
-import {sendData} from '../api.js';
-import {isEscapeEvent} from '../utils.js';
+import {sendData} from '../utils/api.js';
+import {isEscapeEvent} from '../utils/utils.js';
 import './form-validation.js';
 import './upload-img-effects.js';
 
