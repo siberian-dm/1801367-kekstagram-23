@@ -1,22 +1,36 @@
 const imgFilters = document.querySelector('.img-filters');
 const imgFiltersForm = imgFilters.querySelector('.img-filters__form');
+const buttons = imgFiltersForm.querySelectorAll('button');
+const defaultFilterButton = imgFiltersForm.querySelector('#filter-default');
+const randomFilterButton = imgFiltersForm.querySelector('#filter-random');
+const discussedFilterButton = imgFiltersForm.querySelector('#filter-discussed');
 
-imgFilters.classList.remove('img-filters--inactive');
-
-imgFiltersForm.addEventListener('click', (evt) => {
-  const buttons = imgFiltersForm.querySelectorAll('button');
+const toggleButtonClass = function (evt) {
   for (const button of buttons) {
     button.classList.remove('img-filters__button--active');
   }
-  if (evt.target.type === 'button') {
-    evt.target.classList.add('img-filters__button--active');
-  }
-  switch (evt.target.id) {
-    case 'filter-default':
-      break;
-    case 'filter-random':
-      break;
-    case 'filter-discussed':
-      break;
-  }
-});
+  evt.target.classList.add('img-filters__button--active');
+};
+
+const setFilterDefault = function (callback) {
+  defaultFilterButton.addEventListener('click', (evt) => {
+    toggleButtonClass(evt);
+    callback();
+  });
+};
+
+const setFilterRandom = function (callback) {
+  randomFilterButton.addEventListener('click', (evt) => {
+    toggleButtonClass(evt);
+    callback();
+  });
+};
+
+const setFilterDiscussed = function (callback) {
+  discussedFilterButton.addEventListener('click', (evt) => {
+    toggleButtonClass(evt);
+    callback();
+  });
+};
+
+export {setFilterDefault, setFilterRandom, setFilterDiscussed};

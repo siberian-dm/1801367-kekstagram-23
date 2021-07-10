@@ -5,6 +5,17 @@ const thumbnailTemplate = document.querySelector('#picture')
   .querySelector('.picture');
 
 const thumbnailsContainer = document.querySelector('.pictures');
+const imgFilters = document.querySelector('.img-filters');
+
+/**
+ * Удаляет существующие миниатюры из HTML-разметки.
+ */
+const clearThumbnails = function () {
+  const thumbnails = document.querySelectorAll('.picture');
+  for (const thumbnail of thumbnails) {
+    thumbnail.remove();
+  }
+};
 
 /**
  * Отрисовывает миниатюры фотографий в HTML-разметке.
@@ -23,7 +34,9 @@ const renderThumbnails = function (photos) {
     thumbnailsFragment.appendChild(newThumbnail);
   });
 
+  clearThumbnails();
   thumbnailsContainer.appendChild(thumbnailsFragment);
+  imgFilters.classList.remove('img-filters--inactive');
 };
 
 export {renderThumbnails};
