@@ -1,4 +1,4 @@
-import {isEscapeEvent} from './utils.js';
+import {isEscapeEvent} from './utils/utils.js';
 
 const bigPictureOverlay = document.querySelector('.big-picture');
 const cancelButton = bigPictureOverlay.querySelector('.big-picture__cancel');
@@ -43,7 +43,7 @@ const showBigPictureModal = function () {
   document.addEventListener('keydown', onBigPictureEscKeydown);
 };
 
-cancelButton.addEventListener('click', closeBigPictureModal);
+cancelButton.addEventListener('click', () => closeBigPictureModal());
 
 /**
  * Принимает массив объектов-комментариев, отрисовывает комментарии под фото.

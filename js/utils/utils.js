@@ -1,4 +1,5 @@
 const ALERT_SHOW_TIME = 5000;
+const RANDOM_ELEMENTS_AMOUNT = 10;
 
 /**
  * Выводит сообщение об ошибке в верхней части экрана.
@@ -45,13 +46,27 @@ const getRandomInteger = function (firstNumber, secondNumber) {
 };
 
 /**
- * Возвращает случайный элемент массива
+ * Принимает массив элементов, возвращает массив случайных уникальных элементов из исходного массива.
  *
  * @param {Array} elements - массив элементов
- * @return {arrayItem}
+ * @return {Array}
  */
-const getRandomArrayElement = function (elements) {
-  return elements[getRandomInteger(0, elements.length - 1)];
+const getRandomUniqueElements = function (elements) {
+  const uniqueElements = [];
+  if (RANDOM_ELEMENTS_AMOUNT > elements.length) {
+    throw new Error('Количество случайных элементов не может больше исходного массива элементов!');
+  }
+
+  let randomIndex;
+  while (uniqueElements.length < RANDOM_ELEMENTS_AMOUNT) {
+    randomIndex = getRandomInteger(0, elements.length -1);
+
+    if (!uniqueElements.includes(elements[randomIndex])) {
+      uniqueElements.push(elements[randomIndex]);
+    }
+  }
+
+  return uniqueElements;
 };
 
 /**
@@ -64,4 +79,4 @@ const isEscapeEvent = function (evt) {
   return evt.key === 'Escape' || evt.key === 'Esc';
 };
 
-export {showAlert, getRandomInteger, getRandomArrayElement, isEscapeEvent};
+export {showAlert, getRandomUniqueElements, isEscapeEvent};
