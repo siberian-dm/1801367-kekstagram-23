@@ -1,5 +1,7 @@
 import {isEscapeEvent} from './utils/utils.js';
 
+const COMMENTS_RENDER_STEP = 5;
+
 const bigPictureOverlay = document.querySelector('.big-picture');
 const cancelButton = bigPictureOverlay.querySelector('.big-picture__cancel');
 const bigPicture = bigPictureOverlay.querySelector('.big-picture__img').children[0];
@@ -30,6 +32,8 @@ const closeBigPictureModal = function () {
   bigPictureOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onBigPictureEscKeydown);
+  // Генерация события для функции addComments().
+  bigPictureOverlay.dispatchEvent(new Event('close'));
 };
 
 /**
@@ -38,9 +42,11 @@ const closeBigPictureModal = function () {
 const showBigPictureModal = function () {
   document.body.classList.add('modal-open');
   bigPictureOverlay.classList.remove('hidden');
-  socialCommentsCount.classList.add('hidden');
-  loadCommentsButton.classList.add('hidden');
   document.addEventListener('keydown', onBigPictureEscKeydown);
+  // Удаляет текущие комментарии в HTML-разметке
+  for (const comment of socialComments.querySelectorAll('.social__comment')) {
+    comment.remove();
+  }
 };
 
 cancelButton.addEventListener('click', () => closeBigPictureModal());
@@ -50,26 +56,57 @@ cancelButton.addEventListener('click', () => closeBigPictureModal());
  *
  * @param {Array} comments - массив объектов-комментариев
  */
-const addComments = function (comments) {
-  // Удаляет текущие комментарии в HTML-разметке
-  for (const comment of socialComments.querySelectorAll('.social__comment')) {
-    comment.remove();
-  }
-
-  for (const comment of comments) {
+const renderComments = function (comments) {
+  for (let i = 0; i < comments.length; i++) {
+    const comment = comments[i];
     const socialComment = `
       <li class="social__comment">
-      <img
-          class="social__picture"
-          src="${comment.avatar}"
-          alt="${comment.name}"
-          width="35" height="35">
-      <p class="social__text">${comment.message}</p>
+        <img
+            class="social__picture"
+            src="${comment.avatar}"
+            alt="${comment.name}"
+            width="35" height="35">
+        <p class="social__text">${comment.message}</p>
       </li>
     `;
     socialComments.insertAdjacentHTML('beforeend', socialComment);
   }
 };
+
+/**
+ * Принимает массив объектов-комментариев, нарезает массив на заданное число комментариев,
+ * по клику на кнопке 'Показать еще' передает его в функцию отрисовки комментариев.
+ *
+ * @param {Array} comments
+ */
+const addComments = function (comments) {
+  const onloadCommentsButtonClick = function () {
+    let currentComments = socialComments.querySelectorAll('.social__comment');
+    const sliceBegin = currentComments.length;
+    const sliceEnd = currentComments.length + COMMENTS_RENDER_STEP;
+    const slicedComments = comments.slice(sliceBegin, sliceEnd);
+    renderComments(slicedComments);
+
+    currentComments = socialComments.querySelectorAll('.social__comment');
+    socialCommentsCount.textContent = `${currentComments.length} из ${comments.length} комментариев`;
+    if (currentComments.length >= comments.length) {
+      loadCommentsButton.classList.add('hidden');
+    }
+    else {
+      loadCommentsButton.classList.remove('hidden');
+    }
+  };
+
+  loadCommentsButton.addEventListener('click', onloadCommentsButtonClick);
+  // Генерация события при клике на миниатюре, для отрисовки первых 5 комментариев.
+  loadCommentsButton.dispatchEvent(new Event('click'));
+  // Удаление обработчика события с кнопки загрузки комментариев при закрытии модального окна,
+  // для очистки массива комментариев.
+  bigPictureOverlay.addEventListener('close', () => {
+    loadCommentsButton.removeEventListener('click', onloadCommentsButtonClick);
+  });
+};
+
 
 /**
  * Принимает HTML-элемент (миниатюру фотографии) и свойства объекта-фото, добавляет обработчик клика на миниатюре,
