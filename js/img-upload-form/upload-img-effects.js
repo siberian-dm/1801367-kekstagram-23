@@ -49,7 +49,7 @@ const effectLevelSlider = uploadOverlay.querySelector('.effect-level__slider');
 const effectLevel = uploadOverlay.querySelector('.effect-level__value');
 const effectList = uploadOverlay.querySelector('.effects__list');
 
-const ApplyImgEffect = {
+const applyImgEffect = {
   'effect-chrome': () => {
     imgUploadPreview.classList.add('effects__preview--chrome');
     effectLevelSlider.noUiSlider.updateOptions(NoUiSliderProfile.chrome);
@@ -72,7 +72,7 @@ const ApplyImgEffect = {
   },
 };
 
-const ApplyEffectLevel = {
+const applyEffectLevel = {
   'effects__preview--chrome': () => {
     imgUploadPreview.style.filter = `grayscale(${effectLevel.value})`;
   },
@@ -127,7 +127,7 @@ effectLevelSlider.noUiSlider.on('update', (values, handle) => {
 
 effectLevel.addEventListener('change', () => {
   const currentEffect = imgUploadPreview.classList.value;
-  ApplyEffectLevel[currentEffect]();
+  applyEffectLevel[currentEffect]();
 });
 
 /**
@@ -146,7 +146,7 @@ effectList.addEventListener('change', (evt) => {
   const selectedEffect = evt.target.id;
   if (selectedEffect !== 'effect-none') {
     effectLevelSlider.style.display = 'block';
-    ApplyImgEffect[selectedEffect]();
+    applyImgEffect[selectedEffect]();
   }
 });
 
