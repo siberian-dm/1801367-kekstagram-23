@@ -1,9 +1,11 @@
-import {resetImgEffects} from './upload-img-effects.js';
+import {imgUploadPreview,resetImgEffects} from './upload-img-effects.js';
 import {showErrorPopupMessage, showSuccessPopupMessage} from './show-popup-message.js';
 import {sendData} from '../utils/api.js';
 import {isEscapeEvent} from '../utils/utils.js';
 import './form-validation.js';
 import './upload-img-effects.js';
+
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadInput = uploadForm.querySelector('.img-upload__input');
@@ -11,6 +13,8 @@ const uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
 const cancelButton = uploadOverlay.querySelector('.img-upload__cancel');
 const hashtagsInput = uploadOverlay.querySelector('.text__hashtags');
 const descriptionInput = uploadOverlay.querySelector('.text__description');
+// const imgUploadPreviewContainer = uploadOverlay.querySelector('.img-upload__preview');
+// const imgUploadPreview = imgUploadPreviewContainer.children[0];
 
 /**
  * Закрывает форму для добавления фотографии.
@@ -49,6 +53,21 @@ const onUploadInputChange = function () {
   resetImgEffects();
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
+
+  const file = uploadInput.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+  if (matches) {
+    const reader = new FileReader();
+
+    reader.addEventListener('load', () => {
+      imgUploadPreview.src = reader.result;
+    });
+
+    reader.readAsDataURL(file);
+  }
+
   document.addEventListener('keydown', onUploadFormEscDown);
   cancelButton.addEventListener('click', uploadFormClose);
 };

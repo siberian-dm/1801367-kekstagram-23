@@ -150,4 +150,4 @@ effectList.addEventListener('change', (evt) => {
   }
 });
 
-export {resetImgEffects};
+export {imgUploadPreview, resetImgEffects};
