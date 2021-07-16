@@ -35,7 +35,7 @@ const showAlert = (message) => {
  * @param {number} secondNumber - начало/конец диапозона
  * @return {number}
  */
-const getRandomInteger = function (firstNumber, secondNumber) {
+const getRandomInteger = (firstNumber, secondNumber) => {
   if (firstNumber < 0 || secondNumber < 0) {
     return false;
   }
@@ -51,7 +51,7 @@ const getRandomInteger = function (firstNumber, secondNumber) {
  * @param {Array} elements - массив элементов
  * @return {Array}
  */
-const getRandomUniqueElements = function (elements) {
+const getRandomUniqueElements = (elements) => {
   const uniqueElements = [];
   if (RANDOM_ELEMENTS_AMOUNT > elements.length) {
     throw new Error('Количество случайных элементов не может больше исходного массива элементов!');
@@ -75,8 +75,6 @@ const getRandomUniqueElements = function (elements) {
  * @param {Event} evt - событие 'keydown'
  * @return {boolean}
  */
-const isEscapeEvent = function (evt) {
-  return evt.key === 'Escape' || evt.key === 'Esc';
-};
+const isEscapeEvent = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
 export {showAlert, getRandomUniqueElements, isEscapeEvent};
