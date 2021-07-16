@@ -79,10 +79,6 @@ hashtagsInput.addEventListener('input', () => {
   hashtagsInput.reportValidity();
 });
 
-hashtagsInput.addEventListener('keydown', (evt) => {
-  evt.stopPropagation();
-});
+hashtagsInput.addEventListener('keydown', (evt) => evt.stopPropagation());
 
-descriptionInput.addEventListener('keydown', (evt) => {
-  evt.stopPropagation();
-});
+descriptionInput.addEventListener('keydown', (evt) => evt.stopPropagation());

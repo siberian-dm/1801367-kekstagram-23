@@ -10,7 +10,7 @@ const imgFilters = document.querySelector('.img-filters');
 /**
  * Удаляет существующие миниатюры из HTML-разметки.
  */
-const clearThumbnails = function () {
+const clearThumbnails = () => {
   const thumbnails = document.querySelectorAll('.picture');
   for (const thumbnail of thumbnails) {
     thumbnail.remove();
@@ -22,7 +22,7 @@ const clearThumbnails = function () {
  *
  * @param {Array} photos - массив объектов-фотографий
  */
-const renderThumbnails = function (photos) {
+const renderThumbnails = (photos) => {
   const thumbnailsFragment = document.createDocumentFragment();
 
   photos.forEach(({url, likes, comments, description}) => {

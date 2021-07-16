@@ -17,7 +17,7 @@ const loadCommentsButton = bigPictureOverlay.querySelector('.comments-loader');
  *
  * @param {Event} evt - событие 'keydown'
  */
-const onBigPictureEscKeydown = function (evt) {
+const onBigPictureEscKeydown = (evt) => {
   if (isEscapeEvent(evt)) {
     evt.preventDefault();
     // eslint-disable-next-line no-use-before-define
@@ -28,7 +28,7 @@ const onBigPictureEscKeydown = function (evt) {
 /**
  * Закрывает модальное окно 'Big picture'.
  */
-const closeBigPictureModal = function () {
+const closeBigPictureModal = () => {
   bigPictureOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onBigPictureEscKeydown);
@@ -39,7 +39,7 @@ const closeBigPictureModal = function () {
 /**
  * Показывает фото в режиме 'Big picture'(отображает модальное окно с большим фото и комментариями).
  */
-const showBigPictureModal = function () {
+const showBigPictureModal = () => {
   document.body.classList.add('modal-open');
   bigPictureOverlay.classList.remove('hidden');
   document.addEventListener('keydown', onBigPictureEscKeydown);
@@ -56,7 +56,7 @@ cancelButton.addEventListener('click', () => closeBigPictureModal());
  *
  * @param {Array} comments - массив объектов-комментариев
  */
-const renderComments = function (comments) {
+const renderComments = (comments) => {
   for (let i = 0; i < comments.length; i++) {
     const comment = comments[i];
     const socialComment = `
@@ -77,10 +77,10 @@ const renderComments = function (comments) {
  * Принимает массив объектов-комментариев, нарезает массив на заданное число комментариев,
  * по клику на кнопке 'Показать еще' передает его в функцию отрисовки комментариев.
  *
- * @param {Array} comments
+ * @param {Array} comments - массив объектов-комментариев
  */
-const addComments = function (comments) {
-  const onloadCommentsButtonClick = function () {
+const addComments = (comments) => {
+  const onLoadCommentsButtonClick = () =>  {
     let currentComments = socialComments.querySelectorAll('.social__comment');
     const sliceBegin = currentComments.length;
     const sliceEnd = currentComments.length + COMMENTS_RENDER_STEP;
@@ -97,16 +97,13 @@ const addComments = function (comments) {
     }
   };
 
-  loadCommentsButton.addEventListener('click', onloadCommentsButtonClick);
+  loadCommentsButton.addEventListener('click', onLoadCommentsButtonClick);
   // Генерация события при клике на миниатюре, для отрисовки первых 5 комментариев.
   loadCommentsButton.dispatchEvent(new Event('click'));
   // Удаление обработчика события с кнопки загрузки комментариев при закрытии модального окна,
   // для очистки массива комментариев.
-  bigPictureOverlay.addEventListener('close', () => {
-    loadCommentsButton.removeEventListener('click', onloadCommentsButtonClick);
-  });
+  bigPictureOverlay.addEventListener('close', () => loadCommentsButton.removeEventListener('click', onLoadCommentsButtonClick));
 };
-
 
 /**
  * Принимает HTML-элемент (миниатюру фотографии) и свойства объекта-фото, добавляет обработчик клика на миниатюре,
@@ -118,7 +115,7 @@ const addComments = function (comments) {
  * @param {Array} comments - массив с комментариями
  * @param {string} description - описание фото
  */
-const onThumbnailClick = function (thumbnail, url, likes, comments, description) {
+const onThumbnailClick = (thumbnail, url, likes, comments, description) => {
   thumbnail.addEventListener('click', (evt) => {
     evt.preventDefault();
     showBigPictureModal();
