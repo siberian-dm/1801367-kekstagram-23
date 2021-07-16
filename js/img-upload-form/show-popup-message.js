@@ -11,7 +11,7 @@ const successMessageTemplate = document.querySelector('#success')
  * Удаляет pop-up сообщение и обработчики событий.
  *
  */
-const closePopupMessage = function () {
+const closePopupMessage = () => {
   const popupMessage = document.body.querySelector('.error') || document.body.querySelector('.success');
   popupMessage.remove();
   // eslint-disable-next-line no-use-before-define
@@ -25,7 +25,7 @@ const closePopupMessage = function () {
  *
  * @param {Event} evt - событие 'keydown'
  */
-const onPopupMessageEscKeydown = function (evt) {
+const onPopupMessageEscKeydown = (evt) => {
   if (isEscapeEvent(evt)) {
     evt.preventDefault();
     closePopupMessage();
@@ -37,7 +37,7 @@ const onPopupMessageEscKeydown = function (evt) {
  *
  * @param {Event} evt - событие 'click'
  */
-const onDocumentClick = function (evt) {
+const onDocumentClick = (evt) => {
   const popupMessage = document.body.querySelector('.error') || document.body.querySelector('.success');
   if (evt.target === popupMessage) {
     closePopupMessage();
@@ -49,9 +49,9 @@ const onDocumentClick = function (evt) {
  * Добавляет необходимые обработчики событий.
  *
  */
-const showErrorPopupMessage = function () {
+const showErrorPopupMessage = () => {
   const errorPopupMessage = errorMessageTemplate.cloneNode(true);
-  errorPopupMessage.querySelector('.error__button').addEventListener('click', closePopupMessage);
+  errorPopupMessage.querySelector('.error__button').addEventListener('click', () => closePopupMessage());
   document.body.appendChild(errorPopupMessage);
   document.addEventListener('keydown', onPopupMessageEscKeydown);
   document.addEventListener('click', onDocumentClick);
@@ -62,9 +62,9 @@ const showErrorPopupMessage = function () {
  * Добавляет необходимые обработчики событий.
  *
  */
-const showSuccessPopupMessage = function () {
+const showSuccessPopupMessage = () => {
   const successPopupMessage = successMessageTemplate.cloneNode(true);
-  successPopupMessage.querySelector('.success__button').addEventListener('click', closePopupMessage);
+  successPopupMessage.querySelector('.success__button').addEventListener('click', () => closePopupMessage());
   document.body.appendChild(successPopupMessage);
   document.addEventListener('keydown', onPopupMessageEscKeydown);
   document.addEventListener('click', onDocumentClick);

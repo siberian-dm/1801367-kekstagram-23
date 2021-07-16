@@ -24,7 +24,7 @@ descriptionInput.addEventListener('input', () => {
  * @param {string} hashtag
  * @return {boolean}
  */
-const testHashtag = function (hashtag) {
+const testHashtag = (hashtag) => {
   const re = /^#[A-Za-zА-Яа-я0-9]*$/;
   let result = false;
 

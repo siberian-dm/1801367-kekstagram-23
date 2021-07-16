@@ -1,35 +1,31 @@
-import {imgUploadPreview,resetImgEffects} from './upload-img-effects.js';
+import {imgUploadPreview, resetImgEffects} from './upload-img-effects.js';
 import {showErrorPopupMessage, showSuccessPopupMessage} from './show-popup-message.js';
 import {sendData} from '../utils/api.js';
 import {isEscapeEvent} from '../utils/utils.js';
 import './form-validation.js';
 import './upload-img-effects.js';
 
+const DEFAULT_SCALE = 100;
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadInput = uploadForm.querySelector('.img-upload__input');
 const uploadOverlay = uploadForm.querySelector('.img-upload__overlay');
 const cancelButton = uploadOverlay.querySelector('.img-upload__cancel');
-const hashtagsInput = uploadOverlay.querySelector('.text__hashtags');
-const descriptionInput = uploadOverlay.querySelector('.text__description');
-// const imgUploadPreviewContainer = uploadOverlay.querySelector('.img-upload__preview');
-// const imgUploadPreview = imgUploadPreviewContainer.children[0];
+const scaleInput = uploadOverlay.querySelector('.scale__control--value');
 
 /**
  * Закрывает форму для добавления фотографии.
  * Сбрасывает поля формы, удаляет обработчики событий при закрытии формы.
  *
  */
-const uploadFormClose = function () {
-  uploadInput.value = '';
-  hashtagsInput.value = '';
-  descriptionInput.value = '';
+const onCancelButtonClick = () => {
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   // eslint-disable-next-line no-use-before-define
   document.removeEventListener('keydown', onUploadFormEscDown);
-  cancelButton.removeEventListener('click', uploadFormClose);
+  cancelButton.removeEventListener('click', onCancelButtonClick);
+  uploadForm.reset();
 };
 
 /**
@@ -37,10 +33,10 @@ const uploadFormClose = function () {
  *
  * @param {Event} evt - событие 'keydown'
  */
-const onUploadFormEscDown = function (evt) {
+const onUploadFormEscDown = (evt) => {
   if (isEscapeEvent(evt)) {
     evt.preventDefault();
-    uploadFormClose();
+    onCancelButtonClick();
   }
 };
 
@@ -49,7 +45,7 @@ const onUploadFormEscDown = function (evt) {
  * Добавляет обработчики событий при открытии формы.
  *
  */
-const onUploadInputChange = function () {
+const onUploadInputChange = () => {
   resetImgEffects();
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
@@ -68,8 +64,11 @@ const onUploadInputChange = function () {
     reader.readAsDataURL(file);
   }
 
+  scaleInput.value = `${DEFAULT_SCALE}%`;
+  imgUploadPreview.style.transform = `scale(${DEFAULT_SCALE / 100})`;
+
   document.addEventListener('keydown', onUploadFormEscDown);
-  cancelButton.addEventListener('click', uploadFormClose);
+  cancelButton.addEventListener('click', onCancelButtonClick);
 };
 
 uploadInput.addEventListener('change', onUploadInputChange);
@@ -79,11 +78,11 @@ uploadForm.addEventListener('submit', (evt) => {
 
   sendData(
     () => {
-      uploadFormClose();
+      onCancelButtonClick();
       showSuccessPopupMessage();
     },
     () => {
-      uploadFormClose();
+      onCancelButtonClick();
       showErrorPopupMessage();
     },
     new FormData(evt.target),

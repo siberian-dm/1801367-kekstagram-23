@@ -1,6 +1,5 @@
 import '../../nouislider/nouislider.js';
 
-const SCALE_DEFAULT = 100;
 const SCALE_MIN = 25;
 const SCALE_MAX = 100;
 const SCALE_STEP = 25;
@@ -45,8 +44,9 @@ const scaleBiggerButton = uploadOverlay.querySelector('.scale__control--bigger')
 const scaleInput = uploadOverlay.querySelector('.scale__control--value');
 const imgUploadPreviewContainer = uploadOverlay.querySelector('.img-upload__preview');
 const imgUploadPreview = imgUploadPreviewContainer.children[0];
-const effectLevelSlider = uploadOverlay.querySelector('.effect-level__slider');
-const effectLevel = uploadOverlay.querySelector('.effect-level__value');
+const effectLevelSliderContainer = uploadOverlay.querySelector('.img-upload__effect-level');
+const effectLevelSlider = effectLevelSliderContainer.querySelector('.effect-level__slider');
+const effectLevel = effectLevelSliderContainer.querySelector('.effect-level__value');
 const effectList = uploadOverlay.querySelector('.effects__list');
 
 const applyImgEffect = {
@@ -95,7 +95,7 @@ const applyEffectLevel = {
  *
  * @param {Event} evt - событие 'click'
  */
-const onScaleButtonClick = function (evt) {
+const onScaleButtonClick = (evt) => {
   const currentScale = parseFloat(scaleInput.value);
 
   if (evt.target.classList.contains('scale__control--smaller')) {
@@ -118,7 +118,7 @@ scaleInput.addEventListener('change', () => {
 
 noUiSlider.create(effectLevelSlider, NoUiSliderProfile.default);
 
-effectLevelSlider.style.display = 'none';
+effectLevelSliderContainer.style.display = 'none';
 
 effectLevelSlider.noUiSlider.on('update', (values, handle) => {
   effectLevel.value = values[handle];
@@ -133,19 +133,17 @@ effectLevel.addEventListener('change', () => {
 /**
  * Сбрасывает фильтры и масштаб изображения
  */
-const resetImgEffects = function () {
-  scaleInput.value = `${SCALE_DEFAULT}%`;
-  imgUploadPreview.style.transform = `scale(${SCALE_DEFAULT / 100})`;
+const resetImgEffects = () => {
   imgUploadPreview.classList.value = '';
   imgUploadPreview.style.removeProperty('filter');
-  effectLevelSlider.style.display = 'none';
+  effectLevelSliderContainer.style.display = 'none';
 };
 
 effectList.addEventListener('change', (evt) => {
   resetImgEffects();
   const selectedEffect = evt.target.id;
   if (selectedEffect !== 'effect-none') {
-    effectLevelSlider.style.display = 'block';
+    effectLevelSliderContainer.style.display = 'block';
     applyImgEffect[selectedEffect]();
   }
 });
